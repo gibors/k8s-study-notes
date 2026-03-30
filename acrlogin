@@ -1,0 +1,17 @@
+  TOKEN=$(az acr login -n grsloginapp.azurecr.io --expose-token -o tsv --query accessToken)
+podman login grsloginapp.azurecr.io -u 00000000-0000-0000-0000-000000000000 -p $TOKEN
+
+-- we can also use the az cli to attach the ACR to the AKS cluster, which will allow the cluster to pull images from the ACR without needing to create a secret
+az aks update -n grs-k8s-cka -g gib-k8s-rg --attach-acr grsloginapp
+
+
+
+--- create a secret for the ACR credentials, which will be used by the Kubernetes cluster to pull images from the ACR
+grsloginapp
+5wMzpMJWUvhdZ0Pqm7y05Q6IwuYNvZLKwUCImfwW2gYAsMrnQawiJQQJ99CCACYeBjFEqg7NAAACAZCR7EpU
+
+kubectl create secret docker-registry grsloginapp-secret \
+    --docker-server=grsloginapp.azurecr.io \
+    --docker-username=grsloginapp \
+    --docker-password=5wMzpMJWUvhdZ0Pqm7y05Q6IwuYNvZLKwUCImfwW2gYAsMrnQawiJQQJ99CCACYeBjFEqg7NAAACAZCR7EpU \
+    --docker-email=gibrann.reyes@thomsonreuters.com

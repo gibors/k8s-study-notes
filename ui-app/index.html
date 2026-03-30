@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <h2>Kubernetes Demo Login</h2>
+    <input type="text" id="user" placeholder="Username (admin)"><br><br>
+    <input type="password" id="pass" placeholder="Password (k8s_is_awesome)"><br><br>
+    <button onclick="login()">Login</button>
+    <p id="result"></p>
+
+    <script>
+        async function login() {
+            const res = await fetch('/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    username: document.getElementById('user').value,
+                    password: document.getElementById('pass').value
+                })
+            });
+            const data = await res.json();
+            document.getElementById('result').innerText = data.message;
+        }
+    </script>
+</body>
+</html>
